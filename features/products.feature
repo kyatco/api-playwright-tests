@@ -46,43 +46,48 @@ Feature: Products API
 
   @api6
   Scenario: POST To Search Product without search_product parameter should return 400
-    When I send a "POST" request to "/api/searchProduct" with body:
+    When I send a "POST" request to "/searchProduct" with body:
       | dummy | test |
     Then the response status should be 400
     And the response should contain message "Bad request, search_product parameter is missing in POST request."
   # API 7
 
+  @api7
   Scenario: POST To Verify Login with valid details should return 200
-    When I send a "POST" request to "/api/verifyLogin" with body:
+    When I send a "POST" request to "/verifyLogin" with body:
       | email    | test@example.com |
       | password |           123456 |
     Then the response status should be 200
     And the response should contain message "User exists!"
   # API 8
 
+  @api8
   Scenario: POST To Verify Login without email should return 400
-    When I send a "POST" request to "/api/verifyLogin" with body:
+    When I send a "POST" request to "/verifyLogin" with body:
       | password | 123456 |
     Then the response status should be 400
     And the response should contain message "Bad request, email or password parameter is missing in POST request."
   # API 9
 
+  @api9
   Scenario: DELETE To Verify Login should return 405
-    When I send a "DELETE" request to "/api/verifyLogin"
+    When I send a "DELETE" request to "/verifyLogin"
     Then the response status should be 405
     And the response should contain message "This request method is not supported."
   # API 10
 
+  @api10
   Scenario: POST To Verify Login with invalid details should return 404
-    When I send a "POST" request to "/api/verifyLogin" with body:
+    When I send a "POST" request to "/verifyLogin" with body:
       | email    | wrong@example.com |
       | password | wrongpass         |
     Then the response status should be 404
     And the response should contain message "User not found!"
   # API 11
 
+  @api11
   Scenario: POST To Create/Register User Account should return 201
-    When I send a "POST" request to "/api/createAccount" with body:
+    When I send a "POST" request to "/createAccount" with body:
       | name          | John          |
       | email         | john@test.com |
       | password      |        123456 |
@@ -104,16 +109,18 @@ Feature: Products API
     And the response should contain message "User created!"
   # API 12
 
+  @api12
   Scenario: DELETE User Account should return 200
-    When I send a "DELETE" request to "/api/deleteAccount" with body:
+    When I send a "DELETE" request to "/deleteAccount" with body:
       | email    | john@test.com |
       | password |        123456 |
     Then the response status should be 200
     And the response should contain message "Account deleted!"
   # API 13
 
+  @api13
   Scenario: PUT To Update User Account should return 200
-    When I send a "PUT" request to "/api/updateAccount" with body:
+    When I send a "PUT" request to "/updateAccount" with body:
       | name     | John Updated  |
       | email    | john@test.com |
       | password |        123456 |
@@ -122,7 +129,8 @@ Feature: Products API
     And the response should contain message "User updated!"
   # API 14
 
+  @api14
   Scenario: GET user account detail by email should return 200
-    When I send a "GET" request to "/api/getUserDetailByEmail?email=john@test.com"
+    When I send a "GET" request to "/getUserDetailByEmail?email=john@test.com"
     Then the response status should be 200
     And the response should contain "user"
