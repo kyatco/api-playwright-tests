@@ -1,0 +1,30 @@
+{
+  "name": "api-playwright-tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "ENV_FILE=.env npx cucumber-js --require-module ts-node/register"
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kyatco/api-playwright-tests.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kyatco/api-playwright-tests/issues"
+  },
+  "homepage": "https://github.com/kyatco/api-playwright-tests#readme",
+  "description": "",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0",
+    "@playwright/test": "^1.55.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1"
+  }
+}
