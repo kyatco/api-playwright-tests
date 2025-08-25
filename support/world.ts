@@ -8,7 +8,8 @@ export class CustomWorld {
   requestContext!: APIRequestContext;
   response: any;
   parameters: any; // use 'any' if you want to hold Cucumber world params
-
+  // currentEndpoint?: string; // <-- store the last set endpoint
+  token?: string; // <-- store token
   constructor(options: IWorldOptions) {
     this.parameters = options.parameters;
   }

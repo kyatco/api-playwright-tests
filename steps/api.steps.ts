@@ -14,11 +14,11 @@ function resolveEndpoint(rawEndpoint: string, baseUrl?: string): string {
   return `${baseUrl.replace(/\/$/, '')}/${clean.replace(/^\//, '')}`;
 }
 
-Given('I set the endpoint to {string}', async function (this: CustomWorld, endpoint: string) {
-  const cleanEndpoint = endpoint.replace(/['"]+/g, '').trim();
-  endpoint = cleanEndpoint;
-  console.log('🌐 Current endpoint set to:', endpoint);
-});
+// Given('I set the endpoint to {string}', async function (this: CustomWorld, endpoint: string) {
+//   const cleanEndpoint = endpoint.replace(/['"]+/g, '').trim();
+//   endpoint = cleanEndpoint;
+//   console.log('🌐 Current endpoint set to:', endpoint);
+// });
 
 When(
   'I send a {string} request to {string}',
@@ -44,46 +44,107 @@ When(
   }
 );
 
-When(
-  'I send a {string} request to {string} with body:',
-  async function (
-    this: CustomWorld,
-    method: string,
-    endpoint: string,
-    dataTable: DataTable
-  ) {
-    const url = resolveEndpoint(endpoint, process.env.BASE_URL);
-    const body = dataTable.rowsHash();
+// When(
+//   'I send a {string} request to {string} with body:',
+//   async function (
+//     this: CustomWorld,
+//     method: string,
+//     endpoint: string,
+//     dataTable: DataTable
+//   ) {
+//     const url = resolveEndpoint(endpoint, process.env.BASE_URL);
+//     const body = dataTable.rowsHash();
 
-    // Make email unique if present (for create account)
-    if (body.email) {
-      const timestamp = Date.now();
-      body.email = body.email.replace(/@/, `+${timestamp}@`);
-    }
+//     // Make email unique if present (for create account)
+//     if (body.email) {
+//       const timestamp = Date.now();
+//       body.email = body.email.replace(/@/, `+${timestamp}@`);
+//     }
 
-    console.log('➡️ Sending request:', method.toUpperCase(), url);
-    console.log('Request body:', body);
+//     console.log('➡️ Sending request:', method.toUpperCase(), url);
+//     console.log('Request body:', body);
 
-    switch (method.toUpperCase()) {
-      case 'POST':
-        this.response = await this.requestContext.post(url, { data: body });
-        break;
-      case 'PUT':
-        this.response = await this.requestContext.put(url, { data: body });
-        break;
-      case 'DELETE':
-        this.response = await this.requestContext.delete(url, { data: body });
-        break;
-      default:
-        throw new Error(`Unsupported method with body: ${method}`);
-    }
+//     switch (method.toUpperCase()) {
+//       case 'POST':
+//         this.response = await this.requestContext.post(url, { data: body });
+//         break;
+//       case 'PUT':
+//         this.response = await this.requestContext.put(url, { data: body });
+//         break;
+//       case 'DELETE':
+//         this.response = await this.requestContext.delete(url, { data: body });
+//         break;
+//       default:
+//         throw new Error(`Unsupported method with body: ${method}`);
+//     }
 
-    const text = await this.response.text();
-    console.log('⬅️ Response:', text.substring(0, 300)); // log first 300 chars
+//     const text = await this.response.text();
+//     console.log('⬅️ Response:', text.substring(0, 300)); // log first 300 chars
+//   }
+// );
+
+// When('I send a {string} request to {string} with body:', async function (this: CustomWorld, method: string, endpoint: string, dataTable: DataTable) {
+//   const url = resolveEndpoint(endpoint, process.env.BASE_URL);
+//   const body = Object.fromEntries(dataTable.rows());
+
+//   switch (method.toUpperCase()) {
+//     case 'POST':
+//       this.response = await this.requestContext.post(url, { data: body });
+//       break;
+//     case 'PUT':
+//       this.response = await this.requestContext.put(url, { data: body });
+//       break;
+//     default:
+//       throw new Error(`Unsupported method with body: ${method}`);
+//   }
+
+//   console.log('➡️ Sending request:', url);
+//   console.log('Request body:', body);
+// });
+When('I send a {string} request to {string} with body:', async function (
+  this: CustomWorld,
+  method: string,
+  endpoint: string,
+  dataTable: DataTable
+) {
+  const url = resolveEndpoint(endpoint, process.env.BASE_URL);
+  let body = dataTable.rowsHash();
+
+  // Map 'email' to 'username' for Restful-Booker
+  if (body.email) {
+    body.username = body.email;
+    delete body.email;
   }
-);
 
+  console.log('➡️ Sending request:', method.toUpperCase(), url);
+  console.log('Request body:', body);
 
+  switch (method.toUpperCase()) {
+    case 'POST':
+      this.response = await this.requestContext.post(url, { data: body });
+      break;
+    case 'PUT':
+      this.response = await this.requestContext.put(url, { data: body });
+      break;
+    case 'DELETE':
+      this.response = await this.requestContext.delete(url, { data: body });
+      break;
+    default:
+      throw new Error(`Unsupported method with body: ${method}`);
+  }
+
+  // Parse JSON response and store token if present
+  const json = await this.response.json();
+  if (json.token) {
+    this.token = json.token;
+    console.log('✅ Token received:', this.token);
+  } else {
+    console.log('⚠️ No token in response');
+  }
+
+  const text = await this.response.text();
+  console.log('⬅️ Response:', text.substring(0, 300));
+});
 
 Then(
   'the response status should be {int}',
