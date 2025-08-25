@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "ENV_FILE=.env npx cucumber-js --require-module ts-node/register"
+    "test": "ENV_FILE=.env npx cucumber-js --require-module ts-node/register",
+    "test:tags": "ENV_FILE=.env npx cucumber-js --tags "
     
   },
   "repository": {
