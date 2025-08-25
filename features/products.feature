@@ -1,3 +1,4 @@
+@API
 Feature: Products API
 # API 1
 
@@ -10,25 +11,28 @@ Feature: Products API
 
   @api2
   Scenario: POST To All Products List should return 405
-    When I send a "POST" request to "/api/productsList"
+    When I send a "POST" request to "/productsList"
     Then the response status should be 405
     And the response should contain message "This request method is not supported."
   # API 3
 
+  @api3
   Scenario: Get All Brands List should return 200
-    When I send a "GET" request to "/api/brandsList"
+    When I send a "GET" request to "/brandsList"
     Then the response status should be 200
     And the response should contain "brands"
   # API 4
 
+  @api4
   Scenario: PUT To All Brands List should return 405
-    When I send a "PUT" request to "/api/brandsList"
+    When I send a "PUT" request to "/brandsList"
     Then the response status should be 405
     And the response should contain message "This request method is not supported."
   # API 5
 
+  @api5
   Scenario Outline: POST To Search Product should return 200 with results
-    When I send a "POST" request to "/api/searchProduct" with body:
+    When I send a "POST" request to "/searchProduct" with body:
       | search_product | <term> |
     Then the response status should be 200
     And the response should contain "products"
@@ -40,8 +44,9 @@ Feature: Products API
       | jean   |
   # API 6
 
+  @api6
   Scenario: POST To Search Product without search_product parameter should return 400
-    When I send a POST request to "/api/searchProduct" with body:
+    When I send a "POST" request to "/api/searchProduct" with body:
       | dummy | test |
     Then the response status should be 400
     And the response should contain message "Bad request, search_product parameter is missing in POST request."
