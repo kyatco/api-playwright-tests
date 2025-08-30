@@ -10,7 +10,7 @@
       "baseUrl": ".",
       "outDir": "dist"
     },
-    "include": ["steps", "support", "features/**/*.ts"],
+    "include": ["steps", "support", "features/**/*.ts", "utils/endpoints.ts"],
     "exclude": ["node_modules", "dist"]
   }
   

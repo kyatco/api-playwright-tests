@@ -10,6 +10,8 @@ export class CustomWorld {
   parameters: any; // use 'any' if you want to hold Cucumber world params
   // currentEndpoint?: string; // <-- store the last set endpoint
   token?: string; // <-- store token
+  requestHeaders?: Record<string, string>;
+  requestBody?: Record<string, any>;
   constructor(options: IWorldOptions) {
     this.parameters = options.parameters;
   }
