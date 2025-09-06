@@ -121,6 +121,9 @@ When('I send a {string} request to {string} with body:', async function (
   console.log('Request headers:', headers);
 
   switch (method.toUpperCase()) {
+    case 'PATCH':
+      this.response = await this.requestContext.patch(url, { data: body, headers });
+    break;
     case 'POST':
       this.response = await this.requestContext.post(url, { data: body, headers });
       break;

@@ -72,7 +72,7 @@ As a tester
     When I send a "PUT" request to "/booking/{booking.id}" with body:
       """
       {
-        "firstname": "James",
+        "firstname": "James1",
         "lastname": "Brown",
         "totalprice": 112,
         "depositpaid": true,
@@ -94,8 +94,25 @@ As a tester
       | bookingdates.checkout | string  |
       | additionalneeds       | string  |
     And the response should match data:
-      | firstname       | James     |
+      | firstname       | James1    |
       | lastname        | Brown     |
       | totalprice      |       112 |
       | depositpaid     | true      |
       | additionalneeds | Breakfast |
+
+  @patchbooking
+  Scenario: Partial Update
+    When I send a "PATCH" request to "/booking/{booking.id}" with body:
+      """
+      {
+        "firstname" : "James",
+        "lastname" : "Brown1"
+      }
+      """
+    Then the response status should be 200
+    And the response should match schema:
+      | firstname | string |
+      | lastname  | string |
+    And the response should match data:
+      | firstname | James  |
+      | lastname  | Brown1 |
