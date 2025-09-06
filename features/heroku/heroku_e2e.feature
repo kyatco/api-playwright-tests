@@ -116,3 +116,13 @@ As a tester
     And the response should match data:
       | firstname | James  |
       | lastname  | Brown1 |
+
+  @deletebooking
+  Scenario: Delete a booking successfully
+    When I send a "DELETE" request to "/booking/{booking.id}" with body:
+      """
+      {}
+      """
+    Then the response status should be 201
+    When I send a "GET" request to "/booking/{booking.id}"
+    Then the response status should be 404
