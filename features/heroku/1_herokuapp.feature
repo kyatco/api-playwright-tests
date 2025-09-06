@@ -1,4 +1,4 @@
-@createtoken
+@createtoken1
 Feature: API testing in heroku
 
   @h1

@@ -4,6 +4,15 @@ As a tester
   I want to create a booking
   So that I can verify the API stores booking information correctly
 
+  @createtoken
+  Scenario: Create Token
+    When I send a "POST" request to "/auth" with headers:
+      | Content-Type | application/json |
+    When I send a "POST" request to "/auth" with body:
+      | email    | admin       |
+      | password | password123 |
+    Then the response status should be 200
+
   @createbook
   Scenario: Create a new booking with valid data
     When I send a "POST" request to "/booking" with body:
@@ -57,3 +66,36 @@ As a tester
       | booking.totalprice      |       111 |
       | booking.depositpaid     | true      |
       | booking.additionalneeds | Breakfast |
+
+  @updatebook
+  Scenario: Update Booking
+    When I send a "PUT" request to "/booking/{booking.id}" with body:
+      """
+      {
+        "firstname": "James",
+        "lastname": "Brown",
+        "totalprice": 112,
+        "depositpaid": true,
+        "bookingdates": {
+          "checkin": "2018-01-01",
+          "checkout": "2019-01-01"
+        },
+        "additionalneeds": "Breakfast"
+      }
+      """
+    Then the response status should be 200
+    And the response should match schema:
+      | firstname             | string  |
+      | lastname              | string  |
+      | totalprice            | number  |
+      | depositpaid           | boolean |
+      | bookingdates          | object  |
+      | bookingdates.checkin  | string  |
+      | bookingdates.checkout | string  |
+      | additionalneeds       | string  |
+    And the response should match data:
+      | firstname       | James     |
+      | lastname        | Brown     |
+      | totalprice      |       112 |
+      | depositpaid     | true      |
+      | additionalneeds | Breakfast |

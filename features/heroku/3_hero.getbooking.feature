@@ -2,7 +2,7 @@
 Feature: Booking - Get specific booking
 
   Scenario: Get a specific booking by ID
-    When I send a "GET" request to "/booking/2"
+    When I send a "GET" request to "/booking/1"
     Then the response status should be 200
     And the response should match schema:
       | firstname             | string  |
@@ -14,8 +14,8 @@ Feature: Booking - Get specific booking
       | bookingdates.checkout | string  |
       | additionalneeds       | string  |
     And the response should match data:
-      | booking.firstname       | Mark      |
+      | booking.firstname       | James     |
       | booking.lastname        | Brown     |
-      | booking.totalprice      |       890 |
-      | booking.depositpaid     | false     |
+      | booking.totalprice      |       111 |
+      | booking.depositpaid     | true      |
       | booking.additionalneeds | Breakfast |
