@@ -12,8 +12,10 @@ export class CustomWorld {
   token?: string; // <-- store token
   requestHeaders?: Record<string, string>;
   requestBody?: Record<string, any>;
+  variables: Record<string, any> = {}; // <--- for saving dynamic data
   constructor(options: IWorldOptions) {
     this.parameters = options.parameters;
+    this.variables = {}; // ✅ always initialize
   }
 
   async initRequest() {

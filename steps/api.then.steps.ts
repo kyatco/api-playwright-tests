@@ -151,7 +151,7 @@ Then('the response should match schema:', async function (this: CustomWorld, dat
   //
   // Step: Data validation only
   //
-  Then('the response should match data:', async function (this: CustomWorld, dataTable: DataTable) {
+  Then('the response should match data1:', async function (this: CustomWorld, dataTable: DataTable) {
     const expectedData = dataTable.rowsHash();
     const responseBody: unknown = await this.response.json();
   
@@ -194,6 +194,67 @@ Then('the response should match schema:', async function (this: CustomWorld, dat
       });
     } else {
       validateObject(responseBody as Record<string, unknown>, expectedData);
+    }
+  
+    console.log('✅ Data validation complete');
+  });
+
+  Then('the response should match data:', async function (this: CustomWorld, dataTable: DataTable) {
+    const expectedData = dataTable.rowsHash();
+    const responseBody: any = await this.response.json();
+  
+    // If the API wrapped the booking inside "booking", unwrap it
+    const target =
+      responseBody && typeof responseBody === 'object' && 'booking' in responseBody
+        ? responseBody.booking
+        : responseBody;
+  
+    const validateObject = (
+      obj: Record<string, unknown>,
+      expected: Record<string, string>,
+      pathPrefix = ''
+    ) => {
+      for (const [path, expectedValue] of Object.entries(expected)) {
+        // strip "booking." prefix if present
+        const cleanPath = path.startsWith('booking.') ? path.replace('booking.', '') : path;
+  
+        if (!cleanPath.startsWith(pathPrefix)) continue;
+        const relativePath = pathPrefix ? cleanPath.replace(`${pathPrefix}.`, '') : cleanPath;
+  
+        if (relativePath.includes('.')) {
+          const [prop, ...rest] = relativePath.split('.');
+          const nestedKey = rest.join('.');
+          const value = obj[prop];
+          expect(value).toBeDefined();
+  
+          if (typeof value === 'object' && value !== null) {
+            validateObject(value as Record<string, unknown>, { [nestedKey]: expectedValue }, '');
+          } else {
+            throw new Error(`Expected ${prop} to be an object but got ${typeof value}`);
+          }
+        } else {
+          expect(obj).toHaveProperty(relativePath);
+          const actualValue = obj[relativePath];
+  
+          // type coercion (number, boolean, string)
+          let parsedExpected: unknown = expectedValue;
+          if (!isNaN(Number(expectedValue))) parsedExpected = Number(expectedValue);
+          if (expectedValue === 'true' || expectedValue === 'false') parsedExpected = expectedValue === 'true';
+  
+          expect(actualValue).toEqual(parsedExpected);
+          console.log(`✓ ${path} equals ${expectedValue}`);
+        }
+      }
+    };
+  
+    if (Array.isArray(target)) {
+      expect(target.length).toBeGreaterThan(0);
+      target.forEach((item, index) => {
+        validateObject(item as Record<string, unknown>, expectedData);
+        console.log(`✓ Item ${index} data validated`);
+      });
+    } else {
+      validateObject(target as Record<string, unknown>, expectedData);
     }
   
     console.log('✅ Data validation complete');

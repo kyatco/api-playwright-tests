@@ -11,12 +11,12 @@ Feature: Booking API - Get Booking IDs
       | bookingid | number |
 
   Scenario: Get booking IDs filtered by firstname and lastname
-    When I send a "GET" request to "/booking?firstname=Erick&lastname=Ericsson"
+    When I send a "GET" request to "/booking?firstname=Susan&lastname=Jones"
     Then the response status should be 200
     And the response should match schema:
       | bookingid | number |
   # Scenario: Get booking IDs filtered by checkin and checkout
   #   When I send a "GET" request to "/booking?checkin=2013-02-23&checkout=2014-10-23"
-  #   Then the response status should be 200
+  #   Then the response status should be 200s
   #   And the response should match schema:
   #     | bookingid | number |

@@ -1,4 +1,4 @@
-@createbook
+@createbook1
 Feature: Booking API - Create Booking
   As a tester
   I want to create a booking
